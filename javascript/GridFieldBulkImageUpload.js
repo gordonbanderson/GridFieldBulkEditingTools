@@ -79,6 +79,13 @@
 					formsWithUpadtes = $('form.bulkImageUploadUpdateForm.hasUpdate');
 					$(this).data('formsToUpdate', $(formsWithUpadtes).length);
 					url = $(this).data('url');
+					var cacheBusterPrefix = '?';
+
+					// avoid a malformed locale parameter in the case of locale being set
+					if (url.indexOf('?locale=') != -1) {
+						cacheBusterPrefix='&';
+					}
+
 					
 					if ( $(formsWithUpadtes).length > 0 ) $(this).addClass('loading');
 					
@@ -87,7 +94,7 @@
 						cacheBuster = new Date().getTime() + '_' + $(this).attr('name');
 						data = $(this).serialize();
 						$.ajax({
-							url: url + '?cacheBuster=' + cacheBuster,
+							url: url + cacheBusterPrefix+'cacheBuster=' + cacheBuster,
 							data: data,
 							type: "POST",
 							context: $(this)
